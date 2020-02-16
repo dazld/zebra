@@ -14,11 +14,14 @@
    :status (.getStatus charge)})
 
 (defn create
-  [params api-key]
+  [{:keys [idempotency-key] :as params} api-key]
   (charge->map
     (Charge/create
       ^Map (transform-params params)
-      (-> (RequestOptions/builder) (.setApiKey api-key) .build))))
+      (-> (RequestOptions/builder) 
+          (.setApiKey api-key)
+          (.setIdempotencyKey idempotency-key)
+          .build))))
 
 (defn retrieve
   [id api-key]
